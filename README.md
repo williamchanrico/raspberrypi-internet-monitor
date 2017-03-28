@@ -16,6 +16,6 @@ optional arguments:
 ```
 
 ## Preview
-![screenshot](screenshot.png "Screenshot")
+![screenshot](screenshot.png?raw=true "Screenshot")
 
-![demo](demo.gif)
+![demo](demo.gif?raw=true "Demo")
