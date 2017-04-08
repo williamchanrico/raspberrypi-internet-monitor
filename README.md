@@ -16,6 +16,7 @@ optional arguments:
 ```
 
 ## Preview
+![pi-info](pi-info.png?raw=true "Pi's Information")
 ![screenshot](screenshot.png?raw=true "Screenshot")
 
 ![demo](demo.gif?raw=true "Demo")
