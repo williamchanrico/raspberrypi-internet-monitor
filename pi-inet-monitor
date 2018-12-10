@@ -10,69 +10,84 @@ import signal
 import socket
 import argparse
 from time import sleep
+
 import RPi.GPIO as GPIO
 
+
 def signal_term_handler():
-	sys.exit(0)
+    """ SIGTERM handler """
+    sys.exit(0)
+
 
 def internet(host="8.8.8.8", port=53, timeout=3):
-	try:
-		socket.setdefaulttimeout(timeout)
-		socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+    """ Returns True if connected to the internet """
+    try:
+        socket.setdefaulttimeout(timeout)
+        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
 
-		return True
+        return True
 
-	except Exception as e:	
-		return False
+    except:
+        print(sys.exc_info())
+
+        return False
+
 
 def header():
-	print(" _____________________ 	")
-	print("/ hello, who's there? \\	")
-	print("\\ william said hi...  /	")
-	print(" ---------------------	")
-	print("       \\   ,__,			")
-	print("        \\  (..)____		")
-	print("           (__)    )\	")
-	print("              ||--|| *	")
+    """ Prints header """
+    print(" _____________________ 	")
+    print("/ hello, who's there? \\	")
+    print("\\ william said hi...  /	")
+    print(" ---------------------	")
+    print("       \\   ,__,			")
+    print("        \\  (..)____		")
+    print("           (__)    )\	")
+    print("              ||--|| *	")
+
 
 def main(args):
-	GPIO.setmode(GPIO.BCM)
-	GPIO.setup(args.GPIO_NUM, GPIO.OUT)
+    """ Main entry point """
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(args.GPIO_NUM, GPIO.OUT)
 
-	header()
+    header()
 
-	try:
-		print("Process started, CTRL+C to terminate!")
-		print("Testing internet connection by connecting to Google's DNS Server")
-		print("GPIO{} pin will outputs on and off while an internet connection is present".format(args.GPIO_NUM))
+    try:
+        print("Process started")
+        print(
+            "GPIO{} pin will outputs on and off while an internet connection "
+            "is present".format(args.GPIO_NUM))
 
-		while(True):
-			if(internet() == True):
-				GPIO.output(args.GPIO_NUM, True)
-				sleep(2)
+        while True:
+            if internet() is True:
+                GPIO.output(args.GPIO_NUM, True)
+                sleep(2)
 
-				GPIO.output(args.GPIO_NUM, False)
-				sleep(1)
+                GPIO.output(args.GPIO_NUM, False)
+                sleep(1)
 
-	except KeyboardInterrupt:
-		print("\nTerminating process")
+        print("Process has stopped running")
 
-	except Exception as e:
-		print(e)
+    except KeyboardInterrupt:
+        print("Interrupt signal received!\n")
 
-	finally:
-		GPIO.cleanup()
+    except:
+        print("Program terminatted by unknown cause!\n")
 
-		print("GPIO{} cleaned up".format(args.GPIO_NUM))
-		print("Process has stopped running!\n")
+    finally:
+        GPIO.cleanup()
+
+        print("GPIO cleaned up!\n")
+
 
 if __name__ == "__main__":
-	signal.signal(signal.SIGTERM, signal_term_handler)
+    signal.signal(signal.SIGTERM, signal_term_handler)
 
-	parser = argparse.ArgumentParser()
-	parser.add_argument("GPIO_NUM", help="The GPIO output pin number you want to use", type=int)
+    PARSER = argparse.ArgumentParser()
+    PARSER.add_argument(
+        "GPIO_NUM",
+        help="The GPIO output pin number you want to use",
+        type=int)
 
-	args = parser.parse_args()
-
-	main(args)
-
+    ARGS = PARSER.parse_args()
+    main(ARGS)
